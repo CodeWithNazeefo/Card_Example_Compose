@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Box
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,8 +28,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -45,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
@@ -63,68 +67,115 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val painter = painterResource(id = R.drawable.pic5)
-            val description = "Let's learn jetPack compose together"
-            val title = "Let's learn jetPack compose together"
-            Row {
-            ImageCard(painter = painter, title = title, contentDescription = description)
-            }
+            val profilePainter = painterResource(id = R.drawable.pic5)
+            val postPainter = painterResource(id = R.drawable.pic5)
+            val autherName = "Nazeef Khan"
+            val contentDescription = "MIT’s educational ideals in the online classroom, behind the scenes of OpenCourseWare’s podcast Chalk Radio, and more"
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+           ){
+
+            PostView(
+                profilePainter = profilePainter,
+                postPainter = postPainter,
+                autherName = autherName,
+                contentDescription = contentDescription
+            )
+               PostView(
+                profilePainter = profilePainter,
+                postPainter = postPainter,
+                autherName = autherName,
+                contentDescription = contentDescription
+            )
 
 
+           }
         }
+
+
     }
 }
 
 @Composable
-fun ImageCard(
-    painter: Painter,
-    title: String,
-    contentDescription: String
+fun PostView(
+    profilePainter: Painter,
+    postPainter: Painter,
+    autherName: String,
+    contentDescription: String,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier.width(195.dp)
-            .clickable { }
-            .fillMaxWidth(0.5f)
-            .padding(18.dp),
+        modifier = Modifier
+            .height(350.dp)
+            .fillMaxWidth()
+            .padding(15.dp),
+              colors = CardDefaults.cardColors(
+            containerColor = Color.White),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 5.dp
-        )
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
-        Box(modifier = Modifier.height(220.dp)) {
-
+        Row {
             Image(
-                painter = painter, contentDescription = contentDescription,
-                contentScale = ContentScale.Crop
+                painter = profilePainter, contentDescription = autherName,
+                Modifier
+                    .width(60.dp)
+                    .height(60.dp)
+                    .padding(8.dp)
+                    .clip(CircleShape), contentScale = ContentScale.Crop
             )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Black
-                            ), startY = 300f
-                        )
-                    )
+            Text(
+                modifier = Modifier.offset(0.dp, 15.dp),
+                text = autherName,
+                style = TextStyle(Color.Black),
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
             )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp),
-                contentAlignment = Alignment.BottomStart
-            ){
-                Text(text = title,
-                    style = TextStyle(color = Color.White),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-
-                    )
-            }
 
 
         }
+        Column {
+            Card(
+                modifier = Modifier
+                    .offset(0.dp, 10.dp)
+                    .fillMaxSize(), shape = RoundedCornerShape(16.dp)
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+
+                    Image(
+                        painter = postPainter,
+                        contentDescription = contentDescription,
+                        Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        Color.Transparent,
+                                        Color.Black
+                                    ), startY = 300f
+                                )
+                            )
+                    )
+                    Box(
+                        modifier = Modifier
+                            .padding(15.dp, 40.dp)
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.BottomStart
+                    ) {
+                        Text(
+                            text = contentDescription,
+                            style = TextStyle(Color.White),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+            }
+        }
+
     }
 }
